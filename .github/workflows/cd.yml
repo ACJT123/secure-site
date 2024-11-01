@@ -44,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -60,6 +61,12 @@ jobs:
           docker build -t secure-site .
           docker tag secure-site "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
           docker push "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
+
+      - name: Deploy to Staging (first step)
+        env:
+          deploy_url: ${{ secrets.STAGING_URL }}  # Deploy to staging first
+        run: |
+          curl "$deploy_url"
 
       - name: Deploy to Production
         env:
