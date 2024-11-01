@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:development": "cross-env NODE_ENV=development jest",
-    "test:staging": "cross-env NODE_ENV=staging jest",
-    "test:production": "cross-env NODE_ENV=production jest",
+    "test": "jest --forceExit",
+    "test:development": "cross-env NODE_ENV=development jest --forceExit",
+    "test:staging": "cross-env NODE_ENV=staging jest --forceExit",
+    "test:production": "cross-env NODE_ENV=production jest --forceExit",
     "start": "node index.js"
   },
   "keywords": [],
