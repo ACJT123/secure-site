@@ -40,6 +40,8 @@ app.get("/", (req, res) => {
     secure: true,
     httpOnly: true,
   });
+
+  console.log("hello world");
   res.send(`Hello World from ${process.env.NODE_ENV}`);
 });
 
