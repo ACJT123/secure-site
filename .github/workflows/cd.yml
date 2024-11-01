@@ -1,0 +1,53 @@
+name: CD
+
+on:
+  pull_request:
+    branches:
+      - staging
+      - main
+    types: [closed]  # Only trigger on merged pull requests
+
+jobs:
+  deploy_staging:
+    if: github.event.pull_request.merged == true && github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to Staging
+        env:
+          deploy_url: ${{ secrets.STAGING_URL }}  # Assuming you have a secret for staging URL
+        run: |
+          curl "$deploy_url"
+
+  deploy_production:
+    if: github.event.pull_request.merged == true && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to Production
+        env:
+          deploy_url: ${{ secrets.PRODUCTION_URL }}  # Assuming you have a secret for production URL
+        run: |
+          curl "$deploy_url"
