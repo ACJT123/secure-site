@@ -36,10 +36,12 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.cookie("name", "express", {
+  res.cookie("name", "express123", {
     secure: true,
     httpOnly: true,
   });
+
+  console.log("hello world 1245");
   res.send(`Hello World from ${process.env.NODE_ENV}`);
 });
 
