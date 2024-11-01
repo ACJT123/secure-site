@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       - main
-    types: [closed]  # Only trigger on merged pull requests
+    types: [closed] # Only trigger on merged pull requests
 
 jobs:
   deploy_staging:
@@ -19,16 +19,25 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t secure-site .
+          docker tag secure-site "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
+          docker push "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
 
       - name: Deploy to Staging
         env:
-          deploy_url: ${{ secrets.STAGING_URL }}  # Assuming you have a secret for staging URL
+          deploy_url: ${{ secrets.STAGING_URL }} # Assuming you have a secret for staging URL
         run: |
           curl "$deploy_url"
+
+      - name: Logout from Docker Hub
+        run: docker logout
 
   deploy_production:
     if: github.event.pull_request.merged == true && github.ref == 'refs/heads/main'
@@ -41,13 +50,22 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t secure-site .
+          docker tag secure-site "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
+          docker push "${{ secrets.DOCKER_USERNAME }}/secure-site:index"
 
       - name: Deploy to Production
         env:
-          deploy_url: ${{ secrets.PRODUCTION_URL }}  # Assuming you have a secret for production URL
+          deploy_url: ${{ secrets.PRODUCTION_URL }} # Assuming you have a secret for production URL
         run: |
           curl "$deploy_url"
+
+      - name: Logout from Docker Hub
+        run: docker logout
