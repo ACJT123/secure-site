@@ -36,7 +36,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.cookie("name", "express", {
+  res.cookie("name", "express123", {
     secure: true,
     httpOnly: true,
   });
