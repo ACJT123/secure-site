@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
     httpOnly: true,
   });
 
-  console.log("hello world");
+  console.log("hello world  1123123");
   res.send(`Hello World from ${process.env.NODE_ENV}`);
 });
 
